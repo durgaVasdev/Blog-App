@@ -49,7 +49,9 @@
                                 <a href="#" class="btn btn-link">Forgot Password</a>
                             </div>
                             <div class="col-4 text-right">
-                                <input type="submit" class="btn btn-primary" value="register" />
+                                <input type="submit" class="btn btn-primary" value="signup" />
+                                <!--<input type="submit" class="btn btn-primary" value="register" />-->
+
                             </div>
                         </div>
                     </form>
