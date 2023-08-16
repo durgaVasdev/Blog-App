@@ -22,7 +22,7 @@ class AuthController extends Controller
         ]);
         
         if(Auth::attempt($request->only('email','password'))){
-            return redirect('home');
+            return redirect('users');
         }
         return redirect('login')->withError('login details are not valid');
 

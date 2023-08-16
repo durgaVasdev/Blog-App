@@ -30,7 +30,7 @@
 
     <div class="form-group">
         <label for="roles">Roles</label>
-        <select class="form-control" multiple name="roles[]">
+        <select class="selectpicker " multiple name="roles[]">
             @foreach( $roles as $role )
             <option value="{{$role->id}}">{{ $role->name }}</option>
             @endforeach
@@ -39,17 +39,7 @@
         <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
-    <div class="selectpicker" multiple name="roles[]">
-        <label for="roles">Roles</label>
-        <select class="form-control" >
-            @foreach( $roles as $role )
-            <option value="{{$role->id}}">{{ $role->name }}</option>
-            @endforeach
-        </select>
-        @error('role')
-        <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>
+
 
     <div class="form-group">
         <label for="image">Image</label>
@@ -59,30 +49,6 @@
         @enderror
     </div>
 
-    <!--<label for="roles">Select Roless:</label>
-    <select name="roles[]" id="roles" multiple="multiple">
-        @foreach ($roles as $role)
-            <option value="{{ $role->id }}">{{ $role->name }}</option>
-        @endforeach
-    </select>-->
-
-  <!-- <div class="">
-        <label><strong>Select Category :</strong></label><br />
-        <select class="form-control" name="cat[]" multiple="">
-            <option value="php">PHP</option>
-            <option value="react">React</option>
-            <option value="jquery">JQuery</option>
-            <option value="javascript">Javascript</option>
-            <option value="angular">Angular</option>
-            <option value="vue">Vue</option>
-        </select>
-    </div>-->
-    <!--<label for="roles">Roles</label>
-    <select class="selectpicker" multiple data-live-search="true">
-    @foreach( $roles as $role )
-            <option value="{{$role->id}}">{{ $role->name }}</option>
-            @endforeach
-</select>-->
     <button type="submit" class="btn btn-dark px-4">Create User</button>
 </form>
 @endsection

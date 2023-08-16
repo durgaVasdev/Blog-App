@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.ap')
 @section('content')
 <div class="container">
     <div class="row">
@@ -36,6 +36,9 @@
                             <div class="col-4 text-right">
                                 <input type="submit" class="btn btn-primary" value="login" />
                             </div>
+                            <div class="container signup">
+                           <p>Not a member? <a href="register">Sign Up Now</a>.</p>
+                           </div>
                         </div>
                     </form>
                 </div>

@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.ap')
 @section('content')
 
 <div class="container">
@@ -44,21 +44,21 @@
                             <input type="text" name="password_confirmation" class="form-control" placeholder="password_confirmation" />
                         </div>
 
-                        <div class="row">
-                            <div class="col-8 text-left">
-                                <a href="#" class="btn btn-link">Forgot Password</a>
-                            </div>
-                            <div class="col-4 text-right">
-                                <input type="submit" class="btn btn-primary" value="signup" />
-                                <!--<input type="submit" class="btn btn-primary" value="register" />-->
 
-                            </div>
+                        <div class="col-4 text-right">
+                            <input type="submit" class="btn btn-primary" value="Register" />
+                            <!--<input type="submit" class="btn btn-primary" value="register" />-->
+
                         </div>
-                    </form>
+                        <div class="container signin">
+                            <p>Already have an account? <a href="login">Sign in</a>.</p>
+                        </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
- 
+</div>
+
 @endsection

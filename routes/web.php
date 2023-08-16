@@ -27,22 +27,22 @@ Route::get('/', function () {
 
 
 
-Route::group(['middleware'=>'guest'],function(){
+Route::group(['middleware' => 'guest'], function () {
 
-Route::get( 'login',[AuthController::class, 'index'])->name('login');
-Route::post( 'login',[AuthController::class, 'login'])->name('login');
-Route::get( 'register' ,[AuthController::class, 'register_view'])->name('register');
-Route::post( 'register',[AuthController::class, 'register'])->name('register');
+    Route::get('login', [AuthController::class, 'index'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::get('register', [AuthController::class, 'register_view'])->name('register');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
 });
 
-Route::group(['middleware'=>'auth'],function(){
-Route::get('home',[AuthController::class,'home'])->name('home');
-Route::get('logout',[AuthController::class,'logout'])->name('logout');
-Route::resource('users', UserController::class);
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('home', [AuthController::class, 'home'])->name('home');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::resource('users', UserController::class);
 });
 
 
 Route::get('forgot-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
-Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');

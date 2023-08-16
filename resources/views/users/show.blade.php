@@ -2,6 +2,7 @@
 @section('content')
 
 <h3>Users detail</h3>
+<a href="{{ route('users.index') }}" class="btn btn-dark mb-2">BACK</a>
 
 <div class="row">
     <div class="col-sm-4">
@@ -15,6 +16,7 @@
     <div class="col-sm-4">
         <label>Image</label>
         <p>{{ $user->image }}</p>
+        <img src="/images/{{ $user->image }}" width="300px">
     </div>
 
 
