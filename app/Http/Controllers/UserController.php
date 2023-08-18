@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    
+    public function __construct() {
+        $this->middleware('is_admin', ['except' => [
+            'create'
+        ]]);
+    }
+    
     /**
      * Display a listing of the resource.
      *

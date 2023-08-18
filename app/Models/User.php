@@ -9,10 +9,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Traits\HaspermssionsTrait;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable ,CanResetPassword;
+    use HasApiTokens, HasFactory, Notifiable ,CanResetPassword, HaspermssionsTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'image',
+        'is_admin',
     ];
 
     /**
