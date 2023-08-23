@@ -1,7 +1,7 @@
 @extends('layouts.Aapp')
 @section('content')
 
-<h3 style="text-align: center;">All Users</h3>
+<!--<h3 style="text-align: center;">All Users</h3>-->
 <!--a href="{{ route('users.create') }}" class="btn btn-dark mb-2">Add User</a>-->
 
 <table class="table  table-bordered table-hover">

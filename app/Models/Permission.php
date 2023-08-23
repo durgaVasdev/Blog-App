@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Permission extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name','slug'];
     
 
     public function roles(){
@@ -16,6 +16,6 @@ class Permission extends Model
        }
     
        public function users(){
-        return $this->belongsToMany(User::class,'users_permission');
+        return $this->belongsToMany(User::class,'users_permissions');
        }
 }

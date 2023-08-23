@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersPermissionTable extends Migration
+class AddColumnToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateUsersPermissionTable extends Migration
      */
     public function up()
     {
-        Schema::create('users_permission', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('permission_id')->constrained()->onDelete('cascade');
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('is_admin')->default(0);
         });
     }
 
@@ -27,6 +25,8 @@ class CreateUsersPermissionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_permission');
+        Schema::table('users', function (Blueprint $table) {
+            Schema::dropIfExists('is_admin');
+        });
     }
 }

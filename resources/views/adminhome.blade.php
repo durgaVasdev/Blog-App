@@ -1,6 +1,6 @@
 @extends('layouts.apps')
 @section('content')
-<h1>Home : {{ Auth::user()->name}}</h1>
+<h1>users: {{ Auth::user()->name}}</h1>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

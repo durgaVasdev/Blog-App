@@ -9,12 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Traits\HaspermssionsTrait;
+use Spatie\Permission\Traits\HasRoles;
+
 
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable ,CanResetPassword, HaspermssionsTrait;
+    use HasApiTokens, HasFactory, Notifiable ,CanResetPassword,HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'image',
-        'is_admin',
+        
     ];
 
     /**
@@ -51,5 +52,9 @@ class User extends Authenticatable
     public function roles(){
         return $this->belongsToMany(Role::class);
     }
+    
+    //public function userRoles(){
+        //return $this->hasMany(UserRole::class);
+   // }
 }
 

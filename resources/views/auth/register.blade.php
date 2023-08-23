@@ -42,8 +42,21 @@
                         <div class="form-group">
                             <label>Confirm Password</label>
                             <input type="text" name="password_confirmation" class="form-control" placeholder="password_confirmation" />
+                            @if($errors->has('password'))
+                            <p class="text-danger">{{ $errors->first('password ') }}</p>
+                            @endif
                         </div>
 
+
+
+                       <!-- <div class="form-group">
+                            <label >Is Admin</label>
+                                <select id="is_admin" name="is_admin" class="form-control">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            
+                        </div>-->
 
                         <div class="col-4 text-right">
                             <input type="submit" class="btn btn-primary" value="Register" />

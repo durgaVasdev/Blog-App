@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     
     public function __construct() {
-        $this->middleware('is_admin', ['except' => [
+        $this->middleware('roles', ['except' => [
             'create'
         ]]);
     }
@@ -36,6 +37,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
         return view('users.create',['roles'=>$roles]);
+        
     }
 
     /**
@@ -46,12 +48,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //dd('is_admin');
         $request->validate([
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users,email',
             'password'=> 'required|string|min:5',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-             'roles' => 'required|array'
+            //'is_admin'=>'required|boolean',
+            'roles' => 'required|array'
         ]);
 
            
@@ -63,9 +67,25 @@ class UserController extends Controller
             $image->move($destinationPath, $profileImage);
             $input['image'] = "$profileImage";
         }
+        /*DB::beginTransaction();
+        $user = User::create($input);
+        // dd($request->input('roles'));
+        $roles = [];
+        foreach($request->roles as $role)
+        {
+            $roles[] = [
+                'role_id' => $role,
+            ];
+        }
 
+        // dd($roles);
+
+        $user->userRoles()->createMany($roles);
+        DB::commit();
+        */
         $user = User::create($input);
         $user->roles()->attach($request->input('roles'));
+        
         return redirect()->route('users.index')->with('success','User create successfully');
     }
 
@@ -105,6 +125,8 @@ class UserController extends Controller
         $request->validate([
             'name'=>'required|string|max:255',
             'email'=>'required|email|unique:users,email,'.$user->id,
+            //'is_admin'=>'required|boolean',
+            
            // 'password'=> 'required|string|min:5',
              'roles' => 'required|array'
         ]);

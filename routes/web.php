@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -36,13 +41,23 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
 });
 
+Route::resource('products', ProductController::class);
+
+Route::resource('roles', RoleController::class);
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [AuthController::class, 'home'])->name('home');
     Route::get('adminhome', [AuthController::class, 'adminhome'])->name('adminhome');
 
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::resource('users', UserController::class);
+    //Route::resource('users', UserController::class);
+    
+   
 });
+
+//Route::resource('users', UserController::class);
+
+
 
 
 Route::get('forgot-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
@@ -52,4 +67,12 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 
 
 
-Route::get('admin/home', [HomeController::class, 'adminHome'])->name('admin.home')->middleware('is_admin');
+
+
+Route::group(['middleware'=>['auth','roles:admin']],function(){
+    Route::resource('users', UserController::class);
+});
+
+
+//Route::resource('users', UserController::class);
+
