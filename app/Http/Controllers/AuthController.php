@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-
+    
    
 /*public function login(Request $request){
 
@@ -51,17 +51,22 @@ class AuthController extends Controller
    */
     public function login(Request $request)
     {   
+       // dd(auth()->user()->roles);
         $input = $request->all();
    
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
+            //'roles'=> 'required|array',
         ]);
-   
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
-            if (auth()->user()->is_admin == 1) {
-                return redirect()->route('users.index');
+
+
+            $roles = auth()->user()->roles->pluck('name');
+            if ($roles->contains('Admin')) {
+                //return redirect()->route('users.index');
+                return redirect()->route('adminhome');
             }else{
                 return redirect()->route('home');
             }
@@ -99,6 +104,10 @@ class AuthController extends Controller
 
     public function home(){
         return view('home');
+    }
+    
+    public function adminhome(){
+        return view('adminhome');
     }
 
     public function logout(){

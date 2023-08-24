@@ -18,10 +18,10 @@ class CheckRoles
     {
 
         $user = $request->user();
-        //dd($user);
-        $user_roles = $user->roles->pluck('name')->toArray();
-       // dd($roles);
-        if($user && count(array_intersect($roles,$user_roles)) > 0){
+
+        $user_roles = $user->roles->pluck('name');
+
+        if($user_roles->contains('Admin')){
             return $next($request);
         }
 
