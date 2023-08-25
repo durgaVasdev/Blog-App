@@ -1,6 +1,5 @@
 @extends('layouts.app')
-
-
+@include('layouts.sidebar')
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
@@ -14,15 +13,11 @@
             </div>
         </div>
     </div>
-
-
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
-
-
     <table class="table table-bordered">
         <tr>
             <th>No</th>
@@ -41,8 +36,6 @@
                     @can('product-edit')
                     <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
                     @endcan
-
-
                     @csrf
                     @method('DELETE')
                     @can('product-delete')
@@ -54,7 +47,4 @@
 	    @endforeach
     </table>
     {!! $products->links() !!}
-
-
-
 @endsection

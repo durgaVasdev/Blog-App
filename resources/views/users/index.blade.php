@@ -1,9 +1,33 @@
-@extends('layouts.Aapp')
+@extends('layouts.app')
+@include('layouts.sidebar')
 @section('content')
 
-<!--<h3 style="text-align: center;">All Users</h3>-->
-<!--a href="{{ route('users.create') }}" class="btn btn-dark mb-2">Add User</a>-->
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>User Management</h2>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-success" href="{{ route('users.create') }}"> Create New Users</a>
+        </div>
+    </div>
+</div>
 
+<!--@if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif-->
+@if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
 <table class="table  table-bordered table-hover">
     <thead>
         <tr>
@@ -31,8 +55,6 @@
             <td><img src="{{ asset('images/'."$user->image") }}" width="100px"></td>
 
             <td>
-
-
                 <a href="{{ route('users.show', $user->id)}}" class="btn btn-sm btn-dark">View</a>
                 <a href="{{ route('users.edit',$user->id)}}" class="btn btn-sm btn-dark">Edit</a>
                 <form action="{{ route('users.destroy', $user->id)}}" method="POST" class="d-inline">

@@ -1,6 +1,5 @@
 @extends('layouts.app')
-
-
+@include('layouts.sidebar')
 @section('content')
 <div class="row">
     <div class="col-lg-12 margin-tb">
@@ -14,8 +13,6 @@
         </div>
     </div>
 </div>
-
-
 @if ($message = Session::get('success'))
     <div class="alert alert-success">
         <p>{{ $message }}</p>
@@ -45,10 +42,5 @@
     </tr>
     @endforeach
 </table>
-
-
 {!! $roles->render() !!}
-
-
-
 @endsection

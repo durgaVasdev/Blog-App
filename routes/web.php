@@ -76,3 +76,15 @@ Route::group(['middleware'=>['auth','roles:admin']],function(){
 
 //Route::resource('users', UserController::class);
 
+Route::get('/website', function () {
+    return view('website.webhome');
+});
+
+Route::get('/website/about', function () {
+    return view('website.about');
+});
+
+Route::get('/website/contact', function () {
+    return view('website.contact');
+});
+

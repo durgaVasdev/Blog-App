@@ -3,7 +3,6 @@
 
 <div class="container">
     <div class="row">
-
         <div class="col-md-4 offset-md-4">
             <div class="card form-holder">
                 <div class="card-body">
@@ -12,7 +11,7 @@
                     <p class="text-denger">{{Session::get('error')}}</p>
                     @endif
                     @if(Session::has('success'))
-                    <p class="text-success">{{Session::get('success')}}</p>
+                    <p class="text-success">{{Session::get('message')}}</p>
                     @endif
                     <form action="{{ route('register') }}" method="post">
                         @csrf
@@ -20,8 +19,8 @@
                         <div class="form-group">
                             <label>Name</label>
                             <input type="name" name="name" class="form-control" placeholder="Name" />
-                            @if($errors->has('Name'))
-                            <p class="text-danger">{{ $errors->first( 'Name') }}</p>
+                            @if($errors->has('name'))
+                            <p class="text-danger">{{ $errors->first( 'name') }}</p>
                             @endif
                         </div>
                         <div class="form-group">
@@ -35,28 +34,17 @@
                             <label>Password</label>
                             <input type="password" name="password" class="form-control" placeholder="Password" />
                             @if($errors->has('password'))
-                            <p class="text-danger">{{ $errors->first('password ') }}</p>
+                            <p class="text-danger">{{ $errors->first('password' ) }}</p>
                             @endif
                         </div>
 
                         <div class="form-group">
                             <label>Confirm Password</label>
-                            <input type="text" name="password_confirmation" class="form-control" placeholder="password_confirmation" />
-                            @if($errors->has('password'))
-                            <p class="text-danger">{{ $errors->first('password ') }}</p>
+                            <input type="password" name="password_confirmation" class="form-control" placeholder="Comfirm Your Password" />
+                            @if($errors->has('password_confirmation'))
+                            <p class="text-danger">{{ $errors->first('password_confirmation' ) }}</p>
                             @endif
                         </div>
-
-
-
-                       <!-- <div class="form-group">
-                            <label >Is Admin</label>
-                                <select id="is_admin" name="is_admin" class="form-control">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                            
-                        </div>-->
 
                         <div class="col-4 text-right">
                             <input type="submit" class="btn btn-primary" value="Register" />

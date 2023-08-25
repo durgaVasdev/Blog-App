@@ -1,8 +1,30 @@
 @extends('layouts.app')
 @section('content')
 
-<h3>Edit Users</h3>
-<a href="{{ route('users.index') }}" class="btn btn-dark mb-2">BACK</a>
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>Edit User</h2>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+        </div>
+    </div>
+</div>
+
+
+<!--@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+        </ul>
+    </div>
+@endif-->
+<!--<h3>Edit Users</h3>-->
+<!--<a href="{{ route('users.index') }}" class="btn btn-dark mb-2">BACK</a>-->
 
 <form action="{{ route('users.update' , $user->id)}}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -37,10 +59,9 @@
         <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
-
-    <div class="form-group">
-        <label for="roles">Roles</label>
-        <select class="form-control" multiple name="roles[]">
+        <div class="form-group">
+        <label for="roles">Role</label><br>
+        <select id="exampleSelect" class="form-control" multiple="multiple" name="roles[]">
             @foreach( $roles as $role )
             <option value="{{$role->id}}" @if(in_array($role->id , $user->roles->pluck('id')->toArray()))
                 selected @endif>{{ $role->name }}</option>

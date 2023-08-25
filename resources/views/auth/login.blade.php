@@ -10,11 +10,18 @@
                     <p class="text-denger">{{Session::get('error')}}</p>
                     @endif
                     @if(Session::has('success'))
-                    <p class="text-success">{{Session::get('success')}}</p>
+                    <p class="text-success">{{Session::get('success ')}}</p>
                     @endIf
+
+                    @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
                     <form action="{{ route('login') }}" method="post">
                         @csrf
                         @method('post')
+
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" name="email" class="form-control" placeholder="Email" />
@@ -26,7 +33,7 @@
                             <label>Password</label>
                             <input type="password" name="password" class="form-control" placeholder="Password" />
                             @if($errors->has('password'))
-                            <p class="text-danger">{{ $errors->first('password ') }}</p>
+                            <p class="text-danger">{{ $errors->first('password' ) }}</p>
                             @endif
                         </div>
                         <div class="row">
@@ -37,8 +44,8 @@
                                 <input type="submit" class="btn btn-primary" value="login" />
                             </div>
                             <div class="container signup">
-                           <p>Not a member? <a href="register">Sign Up Now</a>.</p>
-                           </div>
+                                <p>Not a member? <a href="register">Sign Up Now</a>.</p>
+                            </div>
                         </div>
                     </form>
                 </div>
