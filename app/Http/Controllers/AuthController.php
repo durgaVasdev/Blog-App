@@ -70,7 +70,7 @@ class AuthController extends Controller
         }
     }
 
-    public function register_view()
+    public function registerView()
     {
         return view('auth.register');
     }

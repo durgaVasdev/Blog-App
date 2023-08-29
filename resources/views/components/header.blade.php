@@ -14,7 +14,7 @@
 <!--Navbarstart-->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">My website</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -42,10 +42,10 @@
   @yield('content')
   <!--FooterStart-->  
   <!-- Footer -->
-<footer class="page-footer font-small blue">
+<footer class="page-footer font-small bg-dark">
 
 <!-- Copyright -->
-<div class="footer-copyright text-center py-3">© 2023 Copyright:
+<div class="footer-copyright text-center py-3" style="color:white;">© 2023 Copyright:
   <a href="/"> My_New_Webiste.com</a>
 </div>
 <!-- Copyright -->

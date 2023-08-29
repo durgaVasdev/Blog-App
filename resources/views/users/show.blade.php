@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@include('layouts.sidebar')
 @section('content')
 
 <h3>Users detail</h3>

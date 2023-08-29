@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Routing\Route as RoutingRoute;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RestPosController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TestController;
 
 
 
@@ -37,7 +39,7 @@ Route::group(['middleware' => 'guest'], function () {
 
     Route::get('login', [AuthController::class, 'index'])->name('login');
     Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::get('register', [AuthController::class, 'register_view'])->name('register');
+    Route::get('register', [AuthController::class, 'registerView'])->name('register');
     Route::post('register', [AuthController::class, 'register'])->name('register');
 });
 
@@ -87,4 +89,15 @@ Route::get('/website/about', function () {
 Route::get('/website/contact', function () {
     return view('website.contact');
 });
+
+
+Route::get('menu',[RestPosController::class, 'index']);
+
+
+Route::get('/form', function(){
+    return view('form');
+});
+
+
+Route::post('/form', [TestController::class, 'validataForm'])->name('validataForm');
 

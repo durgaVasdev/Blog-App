@@ -1,6 +1,6 @@
 <!--@extends('layouts.apps')
 @section('content')-->
-@include('layouts.user_sidebar')
+@include('layouts.Sidebar')
 @section('content')
 <!--<h1>Home : {{ Auth::user()->name}}</h1>-->
 <div class="container">
