@@ -13,7 +13,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RestPosController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\PostController;
 
 
 
@@ -101,3 +103,15 @@ Route::get('/form', function(){
 
 Route::post('/form', [TestController::class, 'validataForm'])->name('validataForm');
 
+
+
+
+
+
+Route::get('posts', [PostController::class, 'index']);
+
+Route::post('post', [PostController::class, 'store']);
+
+Route::put('post', [PostController::class, 'update']);
+
+Route::delete('post/{post_id}', [PostController::class, 'destroy']);
