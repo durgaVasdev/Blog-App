@@ -16,9 +16,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\PostController;
-
-
-
+use App\Http\Controllers\UserProductController;
+use App\Models\Student;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,3 +114,15 @@ Route::post('post', [PostController::class, 'store']);
 Route::put('post', [PostController::class, 'update']);
 
 Route::delete('post/{post_id}', [PostController::class, 'destroy']);
+
+Route::get('students', [StudentController::class, 'index'])->name('students.index');
+
+Route::get('status', [UserController::class, 'userOnlineStatus']);
+
+
+
+
+
+
+
+

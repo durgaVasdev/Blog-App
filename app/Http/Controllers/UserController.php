@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Role;
-use App\Models\Permission;
+use App\Models\Product;
 
+use App\Models\Permission;
+use Closure;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -31,11 +36,61 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+
+
+    public function index(Request $request)
     {
-        $users = User::latest()->get();
-        return view('users.index', ['users' => $users]);
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $role = $request->input('role');
+        $lastSeen = $request->input('last_seen');
+
+        $query = User::query();
+
+        if ($name) {
+            $query->where('name', 'LIKE', "%$name%");
+        }
+
+        if ($email) {
+            $query->where('email', 'LIKE', "%$email%");
+        }
+
+        if ($role) {
+            $query->whereHas('roles', function ($q) use ($role) {
+                $q->where('roles.id', $role);
+            });
+        }
+
+        if ($lastSeen) {
+            $query->whereDate('last_seen', '=', $lastSeen);
+        }
+
+
+        
+        $users = $query->get();
+
+        // Fetch dynamic values for the role dropdown from the database
+        $roles = Role::all();
+
+
+
+        // Fetch distinct last_seen values from the users table
+        $lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
+
+        
+        return view('users.index', compact('users', 'roles', 'lastSeenOptions'));
+    
+       
     }
+    
+       
+        
+    
+    
+        
+    
+    
 
     /**
      * Show the form for creating a new resource.
@@ -46,7 +101,14 @@ class UserController extends Controller
     {
         $roles = Role::all();
         return view('users.create', ['roles' => $roles]);
-    }
+
+}
+
+    //create porduct 
+
+   
+   
+    
 
     /**
      * Store a newly created resource in storage.
@@ -62,7 +124,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:200',
-            'roles' => 'required|array'
+            'roles' => 'required|array',
+            // 'products'=>'required|string'
         ]);
 
         $input = $request->all();
@@ -91,6 +154,8 @@ class UserController extends Controller
         */
         $user = User::create($input);
         $user->roles()->attach($request->input('roles'));
+        $user->products()->attach($request->input('products'));
+    
 
         return redirect()->route('users.index')->with('success', 'User create successfully');
     }
@@ -116,6 +181,8 @@ class UserController extends Controller
     {
         $roles = Role::all();
         return view('users.edit', ['user' => $user, 'roles' => $roles]);
+
+
     }
 
     /**
@@ -151,13 +218,28 @@ class UserController extends Controller
         $user->roles()->sync($request->input('roles'));
         return redirect()->route('users.index')->with('success', 'User update successfully');
     }
+    
+/** for user status */
 
+    public function userOnlineStatus()
+    {
+        $users = User::all();
+        foreach ($users as $user) {
+            if (Cache::has('user-is-online-' . $user->id))
+                echo $user->name . " is online. Last seen: " . Carbon::parse($user->last_seen)->diffForHumans() . " <br>";
+            else
+                echo $user->name . " is offline. Last seen: " . Carbon::parse($user->last_seen)->diffForHumans() . " <br>";
+        }
+    }
+
+    
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
+
     public function destroy(User $user)
     {
         $user->roles()->detach();

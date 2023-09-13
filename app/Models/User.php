@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'image',
+        'last_seen',
         
     ];
 
@@ -53,6 +54,15 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
     
+
+    public function products(){
+        return $this->belongsToMany(Product::class);
+    }
+   
+    
+
+
+
     //public function userRoles(){
         //return $this->hasMany(UserRole::class);
    // }

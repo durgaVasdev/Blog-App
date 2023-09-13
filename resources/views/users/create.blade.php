@@ -48,18 +48,7 @@
         <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
-    <!--<div class="form-group">
-        <label for="roles"> Select Roles</label><br>
-         <select name="roles" id="roles" multiple="multiple" name="roles[]">
-        <select class="selectpicker" multiple="multiple" name="roles[]">
-            @foreach( $roles as $role )
-            <option value="{{$role->id}}">{{ $role->name }}</option>
-            @endforeach
-        </select>
-        @error('role')
-        <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>-->
+    
     
     <div class="form-group">
         <label for="roles">Role</label><br>
