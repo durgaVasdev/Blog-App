@@ -60,8 +60,7 @@
 
 <body>
 
-  @component('layouts.navigation') <!-- Include the navigation component -->
-  @endcomponent
+  
   <div class="container">
     <!--@include('layouts.navigation')-->
     @yield('content')
@@ -92,7 +91,7 @@
   });
 </script>
 
-@stack('script')
+
 </body>
 
 </html>

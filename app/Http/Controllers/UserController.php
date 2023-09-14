@@ -41,10 +41,17 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        
+
         $name = $request->input('name');
         $email = $request->input('email');
         $role = $request->input('role');
-        $lastSeen = $request->input('last_seen');
+    
+        // Get distinct "last_seen" values from the users table
+    $distinctLastSeenValues = User::distinct()->pluck('last_seen')->toArray();
+
+    // Get the selected last_seen value from the request
+    $selectedLastSeen = $request->input('last_seen', 'all');
 
         $query = User::query();
 
@@ -62,13 +69,21 @@ class UserController extends Controller
             });
         }
 
-        if ($lastSeen) {
-            $query->whereDate('last_seen', '=', $lastSeen);
-        }
+        //if ($lastSeen) {
+            //$query->whereDate('last_seen', '=', $lastSeen);
+       //}
 
+       // Apply last_seen filter
+    if ($selectedLastSeen === 'online') {
+        $query->where('last_seen', '<', date("Y-m-d H:i:s", strtotime('+15 minutes', time()) ))->where('last_seen', '>', date("Y-m-d H:i:s", strtotime('-15 minutes', time()) ));
+    } elseif ($selectedLastSeen === 'offline') {
+        $query->where('last_seen', '>=', date("Y-m-d H:i:s", strtotime('+15 minutes', time()) ));
+    }
 
-        
-        $users = $query->get();
+    
+    
+
+      $users = $query->get();
 
         // Fetch dynamic values for the role dropdown from the database
         $roles = Role::all();
@@ -76,13 +91,18 @@ class UserController extends Controller
 
 
         // Fetch distinct last_seen values from the users table
-        $lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
+        //$lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
 
         
-        return view('users.index', compact('users', 'roles', 'lastSeenOptions'));
+        return view('users.index', compact('users', 'roles', 'distinctLastSeenValues', 'selectedLastSeen'));
+
+}
+        
+
+    
     
        
-    }
+    
     
        
         

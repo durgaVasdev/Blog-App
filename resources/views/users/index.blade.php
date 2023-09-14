@@ -44,27 +44,25 @@
     @endforeach
 </select>
 
-<label for="last_seen">Select Last Seen:</label>
-        <select id="last_seen" name="last_seen">
-            <option value="">Select Last Seen</option>
-            @foreach ($lastSeenOptions as $option)
-                <option value="{{ $option }}">{{ $option }}</option>
+
+
+
+        <select name="last_seen">
+            <option value="all" {{ $selectedLastSeen === 'all' ? 'selected' : '' }}>All</option>
+            <option value="online" {{ $selectedLastSeen === 'online' ? 'selected' : '' }}>Online</option>
+            <option value="offline" {{ $selectedLastSeen === 'offline' ? 'selected' : '' }}>Offline</option>
+            @foreach ($distinctLastSeenValues as $value)
+                <option value="{{ $value }}" {{ $selectedLastSeen === $value ? 'selected' : '' }}>
+                    {{ $value }}
+                </option>
             @endforeach
         </select>
 
+
+        
+
 <button type="submit">Search</button>
 </form>
-
-
-
-
-
-
-
-
-
-
-    
 
 
 <table class="table  table-bordered table-hover">
@@ -138,6 +136,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  <script type="text/javascript">
+
 $(document).ready(function() {
             $('#search-form').submit(function(event) {
                 event.preventDefault(); // Prevent the default form submission
@@ -157,7 +156,6 @@ $(document).ready(function() {
                 }); 
             });
         });
-
 
 </script>
 @endpush
