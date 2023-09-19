@@ -74,6 +74,7 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 
 Route::group(['middleware'=>['auth','roles:admin']],function(){
     Route::resource('users', UserController::class);
+    //Route::get('users/search', [UserController::class,'search'])->name('users.search');
 });
 
 

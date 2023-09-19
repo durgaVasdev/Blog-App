@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Permission;
 use Closure;
 use Carbon\Carbon;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,10 +19,10 @@ class UserController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:user-create', ['only' => ['create','store']]);
-         $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }
 
     public function __construct1()
@@ -39,78 +40,146 @@ class UserController extends Controller
 
 
 
-    public function index(Request $request)
-    {
+    public function index(Request $request){
+       // $users = User::latest()->get();
+       //return view('users.index',['users'=>$users]);
         
 
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $role = $request->input('role');
+        //$users = User::with('role')->paginate(10); // Load the related role for each user
+        //$roles = Role::all(); // Fetch all roles
+
+        //return view('users.index', compact('users', 'roles'));
+       // $users = User::with('role')->get(); // Load the related role for each user
+
+        //return view('users.index', compact('users','roles'));
+
     
-        // Get distinct "last_seen" values from the users table
-    $distinctLastSeenValues = User::distinct()->pluck('last_seen')->toArray();
 
-    // Get the selected last_seen value from the request
-    $selectedLastSeen = $request->input('last_seen', 'all');
 
-        $query = User::query();
 
-        if ($name) {
-            $query->where('name', 'LIKE', "%$name%");
-        }
+    // Get the search parameters from the request
+    $name = $request->input('name');
+    $email = $request->input('email');
+    $role = $request->input('role');
 
-        if ($email) {
-            $query->where('email', 'LIKE', "%$email%");
-        }
+    $lastSeen = $request->input('last_seen');
 
-        if ($role) {
-            $query->whereHas('roles', function ($q) use ($role) {
-                $q->where('roles.id', $role);
-            });
-        }
+    // Get all roles for the dropdown
+    $roles = Role::all();
 
-        //if ($lastSeen) {
-            //$query->whereDate('last_seen', '=', $lastSeen);
-       //}
+    // Query to fetch users with filtering
+    $users = User::query();
 
-       // Apply last_seen filter
-    if ($selectedLastSeen === 'online') {
-        $query->where('last_seen', '<', date("Y-m-d H:i:s", strtotime('+15 minutes', time()) ))->where('last_seen', '>', date("Y-m-d H:i:s", strtotime('-15 minutes', time()) ));
-    } elseif ($selectedLastSeen === 'offline') {
-        $query->where('last_seen', '>=', date("Y-m-d H:i:s", strtotime('+15 minutes', time()) ));
+    if (!empty($name)) {
+        $users->where('name', 'LIKE', '%' . $name . '%');
     }
 
-    
-    
+    if (!empty($email)) {
+        $users->where('email', 'LIKE', '%' . $email . '%');
+    }
 
-      $users = $query->get();
+    if ($role) {
+          $users->whereHas('roles', function ($q) use ($role) {
+              $q->where('roles.id', $role);
+       });
+     }
+
+    /* if ($lastSeen) {
+        if ($lastSeen === 'online') {
+            $onlineUserIds = Cache::manyKeys(['user-is-online-*']);
+            $users->whereIn('id', $onlineUserIds);
+        } elseif ($lastSeen === 'offline') {
+            $onlineUserIds = Cache::manyKeys(['user-is-online-*']);
+            $users->whereNotIn('id', $onlineUserIds);
+        }
+    }
+
+*/
+
+    // Filter by last_seen
+    /*if ($request->has('last_seen')) {
+        if ($request->input('last_seen') === 'online') {
+            $users->whereExists(function ($query) {
+                $query->selectRaw(1)
+                      ->from('user_cache_table') // Replace with your cache table name
+                      ->whereColumn('user_cache_table.user_id', 'users.id');
+            });
+        } elseif ($request->input('last_seen') === 'offline') {
+            $users->whereDoesntHave('cacheRelation'); // Replace 'cacheRelation' with your actual relationship
+        }
+    }
+*/
+
+
+    if ($request->has('last_seen')) {
+        if ($request->input('last_seen') === 'online') {
+            $users->where(function ($query) {
+                $query->whereIn('id', Cache::get('online-users', []));
+            });
+        } elseif ($request->input('last_seen') === 'offline') {
+            $users->whereNotIn('id', Cache::get('online-users', []));
+        }
+    }
+   // if (!empty($role)) {
+        //$users->whereHas('role', function ($query) use ($role) {
+           // $query->where('id', $role);
+        //});
+   // }
+
+
+
+    $users = $users->paginate(10); // You can adjust the pagination settings
+    // Load the online users into the cache
+    Cache::put('online-users', $users->pluck('id')->toArray(), now()->addMinutes(5));
+
+    if ($request->ajax()) {
+        return view('users.user-list', compact('users'));
+    }
+
+    return view('users.index', compact('users', 'roles'));
+}
+
+       
+
+
+
+
+    
+/*public function search(Request $request){
+
+    $name = $request->input('name');
+    $email = $request->input('email');
+    //$role = $request->input('role');
+
+    dd('dff');
+
+    $query = User::query();
+   
+    if ($name) {
+        $query->where('name', 'LIKE', "%$name%");
+        
+    }
+    if ($email) {
+        $query->where('email', 'LIKE', "%$email%");
+    }
+
+    //if ($role) {
+      //  $query->whereHas('roles', function ($q) use ($role) {
+           // $q->where('roles.id', $role);
+   //  });
+   // }
+
+    $users = $query->get();
 
         // Fetch dynamic values for the role dropdown from the database
-        $roles = Role::all();
+       // $roles = Role::all();
 
-
-
-        // Fetch distinct last_seen values from the users table
-        //$lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
-
-        
-        return view('users.index', compact('users', 'roles', 'distinctLastSeenValues', 'selectedLastSeen'));
-
-}
-        
-
-    
-    
        
-    
-    
-       
-        
-    
-    
-        
-    
-    
+
+    //$users = $query->with('role')->get();
+        return view('users.search-results', compact('users'));
+}*/
+
 
     /**
      * Show the form for creating a new resource.
@@ -121,14 +190,10 @@ class UserController extends Controller
     {
         $roles = Role::all();
         return view('users.create', ['roles' => $roles]);
-
-}
+    }
 
     //create porduct 
 
-   
-   
-    
 
     /**
      * Store a newly created resource in storage.
@@ -175,7 +240,7 @@ class UserController extends Controller
         $user = User::create($input);
         $user->roles()->attach($request->input('roles'));
         $user->products()->attach($request->input('products'));
-    
+
 
         return redirect()->route('users.index')->with('success', 'User create successfully');
     }
@@ -201,8 +266,6 @@ class UserController extends Controller
     {
         $roles = Role::all();
         return view('users.edit', ['user' => $user, 'roles' => $roles]);
-
-
     }
 
     /**
@@ -220,7 +283,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             //'is_admin'=>'required|boolean',
 
-           // 'password' => 'required|string|min:6',
+            // 'password' => 'required|string|min:6',
             'roles' => 'required|array'
         ]);
 
@@ -238,8 +301,8 @@ class UserController extends Controller
         $user->roles()->sync($request->input('roles'));
         return redirect()->route('users.index')->with('success', 'User update successfully');
     }
-    
-/** for user status */
+
+    /** for user status */
 
     public function userOnlineStatus()
     {
@@ -252,7 +315,7 @@ class UserController extends Controller
         }
     }
 
-    
+
     /**
      * Remove the specified resource from storage.
      *
