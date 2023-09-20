@@ -1,3 +1,4 @@
+
 <tbody id="user-list">
             
             
@@ -48,5 +49,7 @@
     @endforeach
    
     </tbody>
+    
 
     {{ $users->links() }}
+

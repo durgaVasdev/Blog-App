@@ -15,13 +15,13 @@
 
     <!--@if ($errors->any())
     <div class="alert alert-danger">
-                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                    <ul>
-                        @foreach ($errors->all() as $error)
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
     <li>{{ $error }}</li>
     @endforeach
-                    </ul>
-                </div>
+                        </ul>
+                    </div>
     @endif-->
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -30,7 +30,7 @@
     @endif
 
 
-    <form id="search-form">
+    <form>
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" id="name" placeholder="Enter Name">
 
@@ -44,36 +44,11 @@
                 <option value="{{ $role->id }}">{{ $role->name }}</option>
             @endforeach
         </select>
-       
-        <select name="last_seen" class="form-control">
-            <option value="">Select Last Seen</option>
-            <option value="online" {{ request('last_seen') === 'online' ? 'selected' : '' }}>Online</option>
-            <option value="offline" {{ request('last_seen') === 'offline' ? 'selected' : '' }}>Offline</option>
-        </select>
 
-       {{--} <select name="last_seen" class="form-control">
-            <option value="">Select Last Seen</option>
-            @foreach($lastSeenOptions as $key => $label)
-                <option value="{{ $key }}">{{ $label }}</option>
-            @endforeach
-        </select>--}}
-
-       {{-- <select name="last_seen" id="last_seen" class="form-control">
-            <option value="">Select Last Seen</option>
-            <option value="online">Online</option>
-            <option value="offline">Offline</option>
-        </select>--}}
-
-        {{--<select name="last_seen" class="form-control">
-            <option value="">Select Last Seen</option>
-            @foreach($lastSeenOptions as $option)
-                <option value="{{ $option }}" {{ request('last_seen') == $option ? 'selected' : '' }}>
-                    {{ $option }}
-                </option>
-            @endforeach
-        </select>--}}
-        <button type="submit">Search</button>
+        <button id="search-form" type="submit">Search</button>
     </form>
+
+
 
     <table class="table  table-bordered table-hover">
 
@@ -93,7 +68,7 @@
 
         @include('users.user-list')
     </table>
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         $(document).ready(function() {
             $('#search-form').on('click', function(e) {
                 e.preventDefault();
@@ -139,9 +114,105 @@
                 }
             });
         });
-    </script>
-@endsection
+    </script> --}}
 
+    <!--jquery code-->
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#search-form').on('click', function(e) {
+                e.preventDefault();
+                var name = $('#name').val();
+                var email = $('#email').val();
+                var role = $('#role').val();
+
+
+                // Check if any search criteria is entered
+                if (name || email) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ route('users.index') }}',
+                        data: {
+                            name: name,
+                            email: email,
+                            //role: role,
+                            //last_seen: last_seen
+                        },
+                        success: function(response) {
+                            // Replace the user list with the updated data
+
+                            var users = response.data;
+                            console.log(users);
+
+                            var html = '';
+                            if (users.length > 0) {
+                                for (let i = 0; i < users.length; i++) {
+
+                                    html += '<tr>\
+                                            <td>' + users[i]['id'] + '</td>\
+                                            <td>' + users[i]['name'] + '</td>\
+                                            <td>' + users[i]['email'] + '</td>\
+                                            <td>Admin</td>\
+                                            </tr>';
+                                }
+
+                            } else {
+                                html += '<tr>\
+                                        <td> No users found </td>\
+                                        </tr>';
+                            }
+                            $('#user-list').html(html);
+                        },
+                        error: function(xhr) {
+                            // Handle errors if needed
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+
+                } else {
+                    // If no criteria entered, show all users
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ route('users.index') }}',
+                        success: function(data) {
+                            // Replace the user list with the original data
+                            //$('#user-list').html(data);
+                            var users = response.data;
+                            console.log(users);
+
+                            var html = '';
+                            if (users.length > 0) {
+                                for (let i = 0; i < users.length; i++) {
+
+                                    html += '<tr>\
+                                            <td>' + users[i]['id'] + '</td>\
+                                            <td>' + users[i]['name'] + '</td>\
+                                            <td>' + users[i]['email'] + '</td>\
+                                            <td>Admin</td>\
+                                            <td><img src="' + users[i]['image_url'] + '" alt="User Image"></td>\
+                                            </tr>';
+                                }
+
+                            } else {
+                                html += '<tr>\
+                                        <td> No users found </td>\
+                                        </tr>';
+                            }
+                            $('#user-list').html(html);
+                        },
+                        error: function(xhr) {
+                            // Handle errors if needed
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+
+@endsection
 @push('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endpush

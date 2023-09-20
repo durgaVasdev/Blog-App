@@ -84,61 +84,24 @@ class UserController extends Controller
        });
      }
 
-    /* if ($lastSeen) {
-        if ($lastSeen === 'online') {
-            $onlineUserIds = Cache::manyKeys(['user-is-online-*']);
-            $users->whereIn('id', $onlineUserIds);
-        } elseif ($lastSeen === 'offline') {
-            $onlineUserIds = Cache::manyKeys(['user-is-online-*']);
-            $users->whereNotIn('id', $onlineUserIds);
-        }
-    }
 
-*/
-
-    // Filter by last_seen
-    /*if ($request->has('last_seen')) {
-        if ($request->input('last_seen') === 'online') {
-            $users->whereExists(function ($query) {
-                $query->selectRaw(1)
-                      ->from('user_cache_table') // Replace with your cache table name
-                      ->whereColumn('user_cache_table.user_id', 'users.id');
-            });
-        } elseif ($request->input('last_seen') === 'offline') {
-            $users->whereDoesntHave('cacheRelation'); // Replace 'cacheRelation' with your actual relationship
-        }
-    }
-*/
-
-
-    if ($request->has('last_seen')) {
-        if ($request->input('last_seen') === 'online') {
-            $users->where(function ($query) {
-                $query->whereIn('id', Cache::get('online-users', []));
-            });
-        } elseif ($request->input('last_seen') === 'offline') {
-            $users->whereNotIn('id', Cache::get('online-users', []));
-        }
-    }
-   // if (!empty($role)) {
-        //$users->whereHas('role', function ($query) use ($role) {
-           // $query->where('id', $role);
-        //});
-   // }
+     
 
 
 
     $users = $users->paginate(10); // You can adjust the pagination settings
     // Load the online users into the cache
-    Cache::put('online-users', $users->pluck('id')->toArray(), now()->addMinutes(5));
+   // Cache::put('online-users', $users->pluck('id')->toArray(), now()->addMinutes(5));
+   // Fetch distinct last_seen values from the users table
+   //$lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
+
 
     if ($request->ajax()) {
-        return view('users.user-list', compact('users'));
+        return response()->json($users);
     }
 
     return view('users.index', compact('users', 'roles'));
 }
-
        
 
 
@@ -179,6 +142,10 @@ class UserController extends Controller
     //$users = $query->with('role')->get();
         return view('users.search-results', compact('users'));
 }*/
+
+
+
+
 
 
     /**
