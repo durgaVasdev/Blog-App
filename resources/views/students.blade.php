@@ -13,10 +13,24 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 </head>
 <body>
+
+
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" class="form-control" id="email" name="email">
+    </div>
+    
+    <button id="filter" class="btn btn-primary">Apply Filters</button>
     
 <div class="container">
-    <h1>Laravel 8 Datatables Tutorial <br/> ItSolutionStuff.com</h1>
-    <table class="table table-bordered data-table">
+    <h1>Laravel Datatables <br/></h1>
+    <table id="students-table"  class="table table-bordered data-table">
         <thead>
             <tr>
                 <th>No</th>

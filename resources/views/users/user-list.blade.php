@@ -27,7 +27,7 @@
         </td>
         <td>{{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}</td>
      
-        <td>
+       <td>
 
             @foreach( $user->products as $product )
             {{ $product->name }} {{ !$loop->last ? ',' : ''}}

@@ -15,13 +15,13 @@
 
     <!--@if ($errors->any())
     <div class="alert alert-danger">
-                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                        <ul>
-                            @foreach ($errors->all() as $error)
+                                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
     <li>{{ $error }}</li>
     @endforeach
-                        </ul>
-                    </div>
+                                </ul>
+                            </div>
     @endif-->
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -60,7 +60,7 @@
             <th>Image</th>
             <th>Last Seen</th>
             <th></th>
-            <th>product</th>
+           <!-- <th>product</th>-->
             <th>Action</th>
 
         </tr>
@@ -118,6 +118,105 @@
 
     <!--jquery code-->
 
+    <!--<script type="text/javascript">
+        $(document).ready(function() {
+            $('#search-form').on('click', function(e) {
+                e.preventDefault();
+                var name = $('#name').val();
+                var email = $('#email').val();
+                //var role = $('#role').val();
+
+
+                // Check if any search criteria is entered
+                if (name || email) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ route('users.index') }}',
+                        data: {
+                            name: name,
+                            email: email,
+                            //role: role,
+                            //last_seen: last_seen
+                        },
+                        success: function(response) {
+                            // Replace the user list with the updated data
+
+                            var users = response.data;
+
+                            console.log(users);
+
+                            var html = '';
+                            if (users.length > 0) {
+                                for (let i = 0; i < users.length; i++) {
+
+
+                                    html += '<tr>\
+                                                    <td>' + users[i]['id'] + '</td>\
+                                                    <td>' + users[i]['name'] + '</td>\
+                                                    <td>' + users[i]['email'] + '</td>\
+                                                <td>Admin</td>\
+
+
+                                        <
+                                        /tr>';
+                                }
+
+                            } else {
+                                html += '<tr>\
+                                                <td> No users found </td>\
+                                                </tr>';
+                            }
+                            $('#user-list').html(html);
+                        },
+                        error: function(xhr) {
+                            // Handle errors if needed
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+
+                } else {
+                    // If no criteria entered, show all users
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ route('users.index') }}',
+                        success: function(response) {
+                            // Replace the user list with the original data
+                            //$('#user-list').html(data);
+                            var users = response.data;
+                            console.log(users);
+
+                            var html = '';
+                            if (users.length > 0) {
+                                for (let i = 0; i < users.length; i++) {
+
+                                    html += '<tr>\
+                                                    <td>' + users[i]['id'] + '</td>\
+                                                    <td>' + users[i]['name'] + '</td>\
+                                                    <td>' + users[i]['email'] + '</td>\
+                                                    <td>Admin</td>\
+                                                     </tr>';
+                                }
+
+                            } else {
+                                html += '<tr>\
+                                                <td> No users found </td>\
+                                                </tr>';
+                            }
+                            $('#user-list').html(html);
+                        },
+                        error: function(xhr) {
+                            // Handle errors if needed
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+
+            });
+        });
+    </script>-->
+
+
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search-form').on('click', function(e) {
@@ -147,19 +246,38 @@
                             var html = '';
                             if (users.length > 0) {
                                 for (let i = 0; i < users.length; i++) {
+                                    var img = users[i]['image'];
+                                    var src = `{{ asset('images/`+img+`') }}`
+                                    var userId = users[i]['id'];
+                                    var href = `{{ route('users.edit', ':userId') }}`;
+                                    href = href.replace(':userId', userId);
+                                    var userId = users[i]['id'];
+                                    var href = `{{ route('users.show', ':userId') }}`;
+                                    href = href.replace(':userId', userId);
+                                    // var href = `{{ route('users.edit', 96) }}`;  
 
-                                    html += '<tr>\
-                                            <td>' + users[i]['id'] + '</td>\
-                                            <td>' + users[i]['name'] + '</td>\
-                                            <td>' + users[i]['email'] + '</td>\
-                                            <td>Admin</td>\
-                                            </tr>';
+                                     html += '<tr>\
+                                                    <td>' + users[i]['id'] + '</td>\
+                                                    <td>' + users[i]['name'] + '</td>\
+                                                    <td>' + users[i]['email'] + '</td>\
+                                                    <td>Admin</td>\
+                                                    <td><img src="'+src+'" alt="User Image" width="50"></td>\
+                                                    <td>last_seen</td>\
+                                                    <td></td>\
+                                                    <td>product</td>\
+                                                    <td><a href="'+href+'" class="edit-link" data-user-id="' + users[i][
+                                        'id'
+                                    ] + '">Edit</a></td>\
+                                                    <td><a href="'+href+'" class="edit-link" data-user-id="' + users[i][
+                                        'id'
+                                    ] + '">View</a></td>\
+                                    </tr>';
                                 }
 
                             } else {
                                 html += '<tr>\
-                                        <td> No users found </td>\
-                                        </tr>';
+                                                <td> No users found </td>\
+                                                </tr>';
                             }
                             $('#user-list').html(html);
                         },
@@ -175,7 +293,7 @@
                     $.ajax({
                         type: 'GET',
                         url: '{{ route('users.index') }}',
-                        success: function(data) {
+                        success: function(response) {
                             // Replace the user list with the original data
                             //$('#user-list').html(data);
                             var users = response.data;
@@ -184,20 +302,32 @@
                             var html = '';
                             if (users.length > 0) {
                                 for (let i = 0; i < users.length; i++) {
-
-                                    html += '<tr>\
-                                            <td>' + users[i]['id'] + '</td>\
-                                            <td>' + users[i]['name'] + '</td>\
-                                            <td>' + users[i]['email'] + '</td>\
-                                            <td>Admin</td>\
-                                            <td><img src="' + users[i]['image_url'] + '" alt="User Image"></td>\
-                                            </tr>';
+                                        // var edit = '<td><a href="users/'+users[i]['id']+'/edit" class="edit-link" data-user-id="' + users[i][
+                                        //     'id'
+                                        // ] + '">Edit</a></td>\'
+                                var img = users[i]['image'];
+                                    var src = `{{ asset('images/`+img+`') }}`
+                                    var a = users[i]['id'];
+                                    var href = '';
+                                               html += '<tr>\
+                                                    <td>' + users[i]['id'] + '</td>\
+                                                    <td>' + users[i]['name'] + '</td>\
+                                                    <td>' + users[i]['email'] + '</td>\
+                                                     <td>Admin</td>\
+                                                    <td><img src="' +src+'" alt="User Image" width="50"></td>\
+                                                    <td>last_seen</td>\
+                                                    <td></td>\
+                                                    <td>product</td>\
+                                                    <td><a href="users.show" class="edit-link" data-user-id="' + users[i][
+                                        'id'
+                                    ] + '">View</a></td>\
+                                                    </tr>';
                                 }
 
                             } else {
                                 html += '<tr>\
-                                        <td> No users found </td>\
-                                        </tr>';
+                                                <td> No users found </td>\
+                                                </tr>';
                             }
                             $('#user-list').html(html);
                         },
