@@ -15,4 +15,9 @@ class Student extends Model
         "name", "email"
     ];
 
+    public function getCombinedNameEmailAttribute()
+    {
+        return $this->name . ' (' . $this->email . ')';
+    }
+
 }

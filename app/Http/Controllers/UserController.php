@@ -40,113 +40,69 @@ class UserController extends Controller
 
 
 
-    public function index(Request $request){
-       // $users = User::latest()->get();
-       //return view('users.index',['users'=>$users]);
-        
+    public function index(Request $request)
+    {
+        // $users = User::latest()->get();
+        //return view('users.index',['users'=>$users]);
+
 
         //$users = User::with('role')->paginate(10); // Load the related role for each user
         //$roles = Role::all(); // Fetch all roles
 
         //return view('users.index', compact('users', 'roles'));
-       // $users = User::with('role')->get(); // Load the related role for each user
+        // $users = User::with('role')->get(); // Load the related role for each user
 
         //return view('users.index', compact('users','roles'));
 
-    
 
 
 
-    // Get the search parameters from the request
-    $name = $request->input('name');
-    $email = $request->input('email');
-    $role = $request->input('role');
 
-    $lastSeen = $request->input('last_seen');
+        // Get the search parameters from the request
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $role = $request->input('role');
 
-    // Get all roles for the dropdown
-    $roles = Role::all();
+        $lastSeen = $request->input('last_seen');
 
-    // Query to fetch users with filtering
-    $users = User::query();
+        // Get all roles for the dropdown
+        $roles = Role::all();
 
-    if (!empty($name)) {
-        $users->where('name', 'LIKE', '%' . $name . '%');
+        // Query to fetch users with filtering
+        $users = User::query();
+        $users->with(['roles']);
+        if (!empty($name)) {
+            $users->where('name', 'LIKE', '%' . $name . '%');
+        }
+
+        if (!empty($email)) {
+            $users->where('email', 'LIKE', '%' . $email . '%');
+        }
+
+        if ($role) {
+            $users->whereHas('roles', function ($q) use ($role) {
+                $q->where('roles.id', $role);
+            });
+        }
+
+
+
+
+
+
+        $users = $users->paginate(10); // You can adjust the pagination settings
+        // Load the online users into the cache
+        // Cache::put('online-users', $users->pluck('id')->toArray(), now()->addMinutes(5));
+        // Fetch distinct last_seen values from the users table
+        //$lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
+
+
+        if ($request->ajax()) {
+            return response()->json($users);
+        }
+
+        return view('users.index', compact('users', 'roles'));
     }
-
-    if (!empty($email)) {
-        $users->where('email', 'LIKE', '%' . $email . '%');
-    }
-
-    if ($role) {
-          $users->whereHas('roles', function ($q) use ($role) {
-              $q->where('roles.id', $role);
-       });
-     }
-
-
-     
-
-
-
-    $users = $users->paginate(10); // You can adjust the pagination settings
-    // Load the online users into the cache
-   // Cache::put('online-users', $users->pluck('id')->toArray(), now()->addMinutes(5));
-   // Fetch distinct last_seen values from the users table
-   //$lastSeenOptions = User::distinct()->pluck('last_seen')->filter()->toArray();
-
-
-    if ($request->ajax()) {
-        return response()->json($users);
-    }
-
-    return view('users.index', compact('users', 'roles'));
-}
-       
-
-
-
-
-    
-/*public function search(Request $request){
-
-    $name = $request->input('name');
-    $email = $request->input('email');
-    //$role = $request->input('role');
-
-    dd('dff');
-
-    $query = User::query();
-   
-    if ($name) {
-        $query->where('name', 'LIKE', "%$name%");
-        
-    }
-    if ($email) {
-        $query->where('email', 'LIKE', "%$email%");
-    }
-
-    //if ($role) {
-      //  $query->whereHas('roles', function ($q) use ($role) {
-           // $q->where('roles.id', $role);
-   //  });
-   // }
-
-    $users = $query->get();
-
-        // Fetch dynamic values for the role dropdown from the database
-       // $roles = Role::all();
-
-       
-
-    //$users = $query->with('role')->get();
-        return view('users.search-results', compact('users'));
-}*/
-
-
-
-
-
 
     /**
      * Show the form for creating a new resource.

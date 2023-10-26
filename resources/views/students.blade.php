@@ -11,12 +11,15 @@
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.10/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.10/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 
 
 
-    <div class="form-group">
+  {{--  <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" class="form-control" id="name" name="name">
     </div>
@@ -26,17 +29,58 @@
         <input type="text" class="form-control" id="email" name="email">
     </div>
     
-    <button id="filter" class="btn btn-primary">Apply Filters</button>
+    <button id="filter" class="btn btn-primary">Apply Filters</button>--}}
     
 <div class="container">
     <h1>Laravel Datatables <br/></h1>
+  {{--  <form>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" class="form-control" id="email" name="email">
+    </div>
+    </form>--}}
+
+
+   {{--<div class="mb-3">
+        <form id="search-form">
+            <div class="form-group">
+                <label for="searchName">Name:</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="searchEmail">Email:</label>
+                <input type="text" class="form-control" id="email" name="email">
+            </div>
+            <button type="button" class="btn btn-primary" id="search-button">Search</button>
+        </form>
+    </div>--}}
+
+    <form>
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" id="name" placeholder="Enter Name" >
+    
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" id="email" placeholder="Enter Email">
+
+        <button type="button"  id="search-button">Search</button>
+
+       {{-- <button id="search-form" type="submit">Search</button>--}}
+    </form>
+    
     <table id="students-table"  class="table table-bordered data-table">
-        <thead>
+            <thead>
             <tr>
                 <th>No</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th width="100px">Action</th>
+
             </tr>
         </thead>
         <tbody>
@@ -47,20 +91,21 @@
 </body>
    
 <script type="text/javascript">
-  $(function () {
-    
-    var table = $('.data-table').DataTable({
+  
+  $(document).ready(function() {
+    $('#users-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('students.index') }}",
+        ajax: '{!! route('users.index') !!}',
         columns: [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            { data: 'id', name: 'id' },
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+            { data: 'created_at', name: 'created_at' },
+            { data: 'updated_at', name: 'updated_at' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
         ]
     });
-    
-  });
+});
 </script>
 </html>

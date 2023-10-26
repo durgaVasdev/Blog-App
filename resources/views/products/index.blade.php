@@ -21,8 +21,8 @@
     <table class="table table-bordered">
         <tr>
             <th>No</th>
-            <th>Name</th>
-            <th>Details</th>
+            <th>Name_Details</th>
+           <!-- <th>Details</th>-->
             <th>Category_Name</th>
 
             <th width="280px">Action</th>
@@ -30,8 +30,9 @@
 	    @foreach ($products as $product)
 	    <tr>
             <td>{{ $loop->iteration }}</td>
-	        <td>{{ $product->name }}</td>
-	        <td>{{ $product->description }}</td>
+	       {{-- <td>{{ $product->name }}</td>
+	        <td>{{ $product->description }}</td>--}}
+            <td>{{ $product->productNameAndDescription }}</td>
             <td>{{$product->category->categoryname ?? ""}}</td>
             
 	        <td>

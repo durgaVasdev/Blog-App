@@ -15,7 +15,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    /*public function index(Request $request)
     {
         if ($request->ajax()) {
             $data = Student::select('*');
@@ -32,9 +32,32 @@ class StudentController extends Controller
         }
         
         return view('students');
+    }*/
+
+    public function index(Request $request)
+{
+    if ($request->ajax()) {
+        $query = Student::select(['id', 'name', 'email']);
+
+        // Filter by name
+        if ($request->has('name') && !empty($request->name)) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        // Filter by email
+        if ($request->has('email') && !empty($request->email)) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        return DataTables::of($query)
+            ->addColumn('action', 'students.datatables.action')
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
+    return view('students');
 
+}
 
  }
 
